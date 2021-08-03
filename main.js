@@ -2,21 +2,25 @@
 
 let money = numberHandler('Ваш месячный доход?'),
 income = 'фриланс',
-addExpenses = stringHandler('Перечислите возможные расходы за рассчитываемый период через запятую. (пример: "Квартплата, проездной, кредит")'),
-deposit = isDeposit(), 
+// addExpenses = stringHandler('Перечислите возможные расходы за рассчитываемый период через запятую. (пример: "Квартплата, проездной, кредит")'),
+// deposit = isDeposit(), 
 mission = 2200000, 
 period = 12,
-expenses1 = stringHandler('Введите обязательную статью расходов?'),
+// обязательные расходы
+// expenses1 = stringHandler('Введите обязательную статью расходов?'),
 amount1 = numberHandler('Во сколько это обойдется?'),
-expenses2 = stringHandler('Введите обязательную статью расходов?'),
+// expenses2 = stringHandler('Введите обязательную статью расходов?'),
 amount2 = numberHandler('Во сколько это обойдется?'),
+// расчет бюджета
 budgetMonth = money - amount1 - amount2,
-budgetDay = Math.floor(budgetMonth/30);
+budgetDay = Math.floor(budgetMonth/30),
+// чистая прибыль
+accumulatedMonth = getAccumulatedMonth();
 
 
-console.log('Месячный бюджет budgetMonth: ', budgetMonth);
-console.log('Цель будет достигнута через: ', Math.ceil( mission/budgetMonth));
-console.log('Дневной бюджет с учетом расходов budgetDay: ', budgetDay);
+// console.log('Месячный бюджет budgetMonth: ', budgetMonth);
+// console.log('Цель будет достигнута через: ', Math.ceil( mission/budgetMonth));
+// console.log('Дневной бюджет с учетом расходов budgetDay: ', budgetDay);
 
 
 if(budgetDay > 1200){
@@ -29,7 +33,7 @@ if(budgetDay > 1200){
    alert('Что то пошло не так');
 }
 
-
+// Обработчик ввода числа
 function numberHandler(text){
    let value = +prompt(text);
 
@@ -44,7 +48,7 @@ function numberHandler(text){
    }
 
 }
-
+// обработчик ввода строки
 function stringHandler(text){
    let Value = prompt(text);
 
@@ -59,7 +63,7 @@ function stringHandler(text){
    }
 
 }
-
+// есть ли депозит?
 function isDeposit(){
    let Value = prompt('Есть ли у вас депозит в банке? (Введите Да или Нет)');
 
@@ -84,15 +88,28 @@ function isDeposit(){
 
 }
 
-console.log('income: ', typeof income);
-console.log('deposit: ', typeof deposit);
+// обязательные расходы
+function getExpensesMonth(){
+   return amount1 + amount2;
+}
+// накопления за месяц
+function getAccumulatedMonth(){
+  return money - getExpensesMonth();
+}
+// период достижения цели
+function getTargetMonth(){
+   
+}
+
+// console.log('income: ', typeof income);
+// console.log('deposit: ', typeof deposit);
 
 
-console.log('addExpenses: ', addExpenses.length);
+// console.log('addExpenses: ', addExpenses.length);
 
-console.log('“Период равен ' + period + ' месяцев”');
-console.log('“Цель заработать ' + mission + ' рублей/долларов/гривен/юани”');
+// console.log('“Период равен ' + period + ' месяцев”');
+// console.log('“Цель заработать ' + mission + ' рублей/долларов/гривен/юани”');
 
-console.log('addExpenses: ', addExpenses.toLocaleLowerCase().split(','));
+// console.log('addExpenses: ', addExpenses.toLocaleLowerCase().split(','));
 
-console.log('budgetDay: ', budgetDay);
+// console.log('budgetDay: ', budgetDay);
