@@ -2,36 +2,35 @@
 
 let money = numberHandler('Ваш месячный доход?'),
 income = 'фриланс',
-// addExpenses = stringHandler('Перечислите возможные расходы за рассчитываемый период через запятую. (пример: "Квартплата, проездной, кредит")'),
-// deposit = isDeposit(), 
+addExpenses = stringHandler('Перечислите возможные расходы за рассчитываемый период через запятую. (пример: "Квартплата, проездной, кредит")'),
+deposit = isDeposit(), 
 mission = 2200000, 
 period = 12,
 // обязательные расходы
-// expenses1 = stringHandler('Введите обязательную статью расходов?'),
+expenses1 = stringHandler('Введите обязательную статью расходов?'),
 amount1 = numberHandler('Во сколько это обойдется?'),
-// expenses2 = stringHandler('Введите обязательную статью расходов?'),
+expenses2 = stringHandler('Введите обязательную статью расходов?'),
 amount2 = numberHandler('Во сколько это обойдется?'),
-// расчет бюджета
-budgetMonth = money - amount1 - amount2,
-budgetDay = Math.floor(budgetMonth/30),
+
 // чистая прибыль
-accumulatedMonth = getAccumulatedMonth();
-
-
-// console.log('Месячный бюджет budgetMonth: ', budgetMonth);
-// console.log('Цель будет достигнута через: ', Math.ceil( mission/budgetMonth));
-// console.log('Дневной бюджет с учетом расходов budgetDay: ', budgetDay);
-
-
-if(budgetDay > 1200){
-   alert('У вас высокий уровень дохода');
-}else if(budgetDay > 600 && budgetDay < 1200){
-   alert('У вас средний уровень дохода');
-} else if(budgetDay < 600 && budgetDay > 0){
-   alert('К сожалению у вас уровень дохода ниже среднего');
-} else if(budgetDay < 0){
-   alert('Что то пошло не так');
-}
+accumulatedMonth = getAccumulatedMonth(),
+// чистая прибыль в день
+budgetDay = Math.floor(accumulatedMonth/30),
+// определение статуса клиента
+getStatusIncome = function(){
+   if(budgetDay > 1200){
+      return('У вас высокий уровень дохода');
+   }else if(budgetDay > 600 && budgetDay < 1200){
+      return('У вас средний уровень дохода');
+   } else if(budgetDay < 600 && budgetDay > 0){
+      return('К сожалению у вас уровень дохода ниже среднего');
+   } else if(budgetDay < 0){
+      return('Что то пошло не так');
+   }
+},
+showTypeOf = function(data){
+   console.log(data, typeof(data));
+};
 
 // Обработчик ввода числа
 function numberHandler(text){
@@ -87,29 +86,27 @@ function isDeposit(){
 
 
 }
-
 // обязательные расходы
 function getExpensesMonth(){
    return amount1 + amount2;
 }
 // накопления за месяц
 function getAccumulatedMonth(){
-  return money - getExpensesMonth();
+   return money - getExpensesMonth();
 }
 // период достижения цели
 function getTargetMonth(){
-   
+   let result = mission / accumulatedMonth;
+   return Math.floor(result);
 }
 
-// console.log('income: ', typeof income);
-// console.log('deposit: ', typeof deposit);
+showTypeOf(money);
+showTypeOf(income);
+showTypeOf(deposit);
 
+console.log('Расходы за месяц вызов: ', getExpensesMonth());
+console.log('Вывод возможных расходов в виде массива: ', addExpenses.toLocaleLowerCase().split(','));
+console.log('Cрок достижения цели в месяцах: ', getTargetMonth());
+console.log('Бюджет на день: ', budgetDay);
+console.log('getStatusIncome(): ', getStatusIncome());
 
-// console.log('addExpenses: ', addExpenses.length);
-
-// console.log('“Период равен ' + period + ' месяцев”');
-// console.log('“Цель заработать ' + mission + ' рублей/долларов/гривен/юани”');
-
-// console.log('addExpenses: ', addExpenses.toLocaleLowerCase().split(','));
-
-// console.log('budgetDay: ', budgetDay);
