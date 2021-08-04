@@ -3,10 +3,8 @@
 // статьи обязательных расходов
 const expenses = [],
 income = 'фриланс',
-// deposit = isDeposit(), 
 mission = 2200000, 
 period = 12;
-
 
 // определение статуса клиента
 const getStatusIncome = () => {
@@ -21,28 +19,31 @@ const getStatusIncome = () => {
    }
 };
 
-// const showTypeOf = function(data){
-//    console.log(data, typeof(data));
-// };
+const showTypeOf = function(data){
+   console.log(data, typeof(data));
+};
 
 // вызов модального окна
 const modal = (text, test) => {
    let value = prompt(text);
 
    // если value true и число
-   if(test(value) && !!parseFloat(value)){
-      console.log('value число: ', value);
-      return +value;
-   // если value true и строка
-   }else if(test(value) && !parseFloat(value)){
-      console.log('value строка: ', value);
-      return value;
+   if(test){
+      if(test(value) && !!parseFloat(value)){
+         console.log('value число: ', value);
+         return +value;
+      // если value true и строка
+      }else if(test(value) && !parseFloat(value)){
+         console.log('value строка: ', value);
+         return value;
+      }else{
+         confirm('Введите верное значение');
+         return modal(text, test);
+      }
    }else{
-      confirm('Введите верное значение');
-      modal(text, test);
-   }
+      return value;
+   }  
 };
-
 
 // Проверка ввода числа
 const numberHandler = (value) => {
@@ -53,11 +54,14 @@ const numberHandler = (value) => {
 
 // Проверка ввода строки
 const stringHandler = (value) => {
-   if(value === null || value === ''){
+   if(value === null || value === '' || value === undefined){
+      console.log('value 1: ', value);
       return false;
    }else if(!Number.isNaN(parseFloat(value))){
+      console.log('value 2: ', value);
       return false;
    }else{
+      console.log('value 3: ', value);
       return true;
    }
 
@@ -98,17 +102,27 @@ let getExpensesMonth = function(){
    return sum;
 };
 
-
 // доходы за месяц (через callback проверяем на цифры)
-let money = modal('Ваш месячный доход?', numberHandler),
+let money;
+
+let start = function(){
+  do {
+     money = modal('Ваш месячный доход?');
+     console.log('money: ', money);
+   }while (!numberHandler(money));
+};
+
+start();
+
+let deposit = isDeposit();
+
 // расходы за месяц
-expensesAmount = getExpensesMonth();
+let expensesAmount = getExpensesMonth();
 
 // расчет накопления за месяц
 const getAccumulatedMonth = () => {
    return money - expensesAmount;
 };
-
 
 // чистая прибыль
 let accumulatedMonth = getAccumulatedMonth();
@@ -118,24 +132,29 @@ let budgetDay = Math.floor(accumulatedMonth / 30);
 // период достижения цели
 const getTargetMonth = () => {
    let result = mission / accumulatedMonth;
-   return Math.floor(result);
-};
 
-// Строка слишком длинная незнаю как перенести так как это значение передается в функцию
+   if(result > 0){
+      return console.log(`Цель будет достигнута через ${Math.floor(result)} месяца`);
+   }else{
+      return console.log('Цель не будет достигнута');
+   }
+};
+getTargetMonth();
+
+// дополнительные расходы
 const addExpenses = modal(`
    Перечислите возможные расходы за рассчитываемый период
    через запятую. (пример: "Квартплата, проездной, кредит")
    `, stringHandler).toLocaleLowerCase().split(',');
 
-// showTypeOf(money);
-// showTypeOf(income);
-// showTypeOf(deposit);
+showTypeOf(money);
+showTypeOf(income);
+showTypeOf(deposit);
 console.log('Статьи расходов :', expenses);
 console.log('Итого доходы за месяц: ', money);
 console.log('Итого расходы за месяц: ', expensesAmount);
 console.log('Итого чистой прибыли за месяц: ', accumulatedMonth);
 console.log('Вывод возможных расходов в виде массива: ', addExpenses);
-console.log('Cрок достижения цели в месяцах: ', getTargetMonth());
 console.log('Бюджет на день: ', budgetDay);
 console.log('Статус дохода: ', getStatusIncome());
 
