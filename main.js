@@ -2,15 +2,12 @@
 // вызов модального окна
 const modal = (text, test) => {
    let value = prompt(text);
-
    // если value true и число
    if (test) {
       if (test(value) && !!parseFloat(value)) {
-         console.log('value число: ', value);
          return +value;
          // если value true и строка
       } else if (test(value) && !parseFloat(value)) {
-         console.log('value строка: ', value);
          return value;
       } else {
          confirm('Введите верное значение');
@@ -23,65 +20,52 @@ const modal = (text, test) => {
 
 // Проверка ввода числа
 const numberHandler = (value) => {
-   // console.log('приходит', value);
-   console.log('!isNaN число: ', !isNaN(parseFloat(value) && isFinite(value)));
    return !isNaN(parseFloat(value) && isFinite(value));
 };
 
 // Проверка ввода строки
 const stringHandler = (value) => {
    if (value === null || value === '' || value === undefined) {
-      console.log('value 1: ', value);
       return false;
    } else if (!Number.isNaN(parseFloat(value))) {
-      console.log('value 2: ', value);
       return false;
    } else {
-      console.log('value 3: ', value);
       return true;
    }
 
 };
+
 let money,
    start = function () {
       do {
          money = modal('Ваш месячный доход?');
-         console.log('money: ', money);
+         // console.log('money: ', money);
       } while (!numberHandler(money));
+
    };
 
 start();
 
 let appData = {
-   // Дополнительные расходы
+   // Доход
+   budget: money,
+   // чистая прибыль в день
+   budgetDay: 0,
+   // чистая прибыль в месяц
+   budgetMonth: 0,
+   // основные расходы за месяц
+   expensesMonth: 0,
+   // Дополнительные расходы за месяц
+   expensesAmount: 0,
+   // 
    income: {},
    addIncome: [],
    // статьи обязательных расходов
    expenses: {},
+   // статьи дополнительных расходов
    addExpenses: [],
    // есть ли депозит?
    deposit: false,
-   // deposit: function isDeposit() {
-   //    let value = prompt('Есть ли у вас депозит в банке? (Введите Да или Нет)');
-
-   //    if (value === null || value === '') {
-   //       confirm('Введите значение');
-   //       return isDeposit();
-   //    } else if (!Number.isNaN(parseFloat(value))) {
-   //       confirm('Пожалуйста введите верное значение');
-   //       return isDeposit();
-   //    } else if (value.toLowerCase() === 'нет') {
-   //       value = false;
-   //       return value;
-   //    }
-   //    else if (value.toLowerCase() === 'да') {
-   //       value = true;
-   //       return value;
-   //    } else {
-   //       confirm('Пожалуйста введите верное значение');
-   //       return isDeposit();
-   //    }
-   // },
    mission: 2200000,
    period: 12,
    asking: function () {
@@ -92,93 +76,70 @@ let appData = {
          `, stringHandler).toLocaleLowerCase().split(',');
 
       // есть ли депозит?
-      appData.deposit = () => {
-         let value = prompt('Есть ли у вас депозит в банке? (Введите Да или Нет)');
+      appData.deposit = confirm('Есть ли у вас депозит в банке?');
 
-         if (value === null || value === '') {
-            confirm('Введите значение');
-            return this();
-         } else if (!Number.isNaN(parseFloat(value))) {
-            confirm('Пожалуйста введите верное значение');
-            return this();
-         } else if (value.toLowerCase() === 'нет') {
-            value = false;
-            return value;
+      appData.expensesAmount = function () {
+         let sum = 0;
+
+         for (let i = 0; i < 2; i++) {
+            let key = modal(`Введите обязательную статью расходов ${i + 1}?`, stringHandler);
+            let value = modal('Во сколько это обойдется?', numberHandler);
+
+            appData.expenses[key] = value;
+            sum += value;
          }
-         else if (value.toLowerCase() === 'да') {
-            value = true;
-            return value;
-         } else {
-            confirm('Пожалуйста введите верное значение');
-            return this();
-         }
-      };
+
+         return sum;
+      }();
+   },
+   // расчеты
+   // расчет обязательные расходы (итого:)
+   getExpensesMonth: function () {
+      let sum = 0;
+      for (let key in appData.expenses) {
+         sum += appData.expenses[key];
+      }
+
+      appData.expensesMonth = sum;
+   },
+   // расчет накопления за месяц
+   getBudget: function () {
+      appData.budgetMonth = appData.budget - appData.expensesAmount;
+      appData.budgetDay = Math.floor(+appData.budgetMonth / 30);
+   },
+
+   getTargetMonth: function () {
+      let result = appData.mission / appData.budgetMonth;
+
+      if (result > 0) {
+         return console.log(`Цель будет достигнута через ${Math.floor(result)} месяца`);
+      } else {
+         return console.log('Цель не будет достигнута');
+      }
+   },
+   // определение статуса клиента
+   getStatusIncome: function () {
+      if (appData.budgetDay > 1200) {
+         return ('У вас высокий уровень дохода');
+      } else if (appData.budgetDay > 600 && appData.budgetDay < 1200) {
+         return ('У вас средний уровень дохода');
+      } else if (appData.budgetDay < 600 && appData.budgetDay > 0) {
+         return ('К сожалению у вас уровень дохода ниже среднего');
+      } else if (appData.budgetDay < 0) {
+         return ('Что то пошло не так');
+      }
    }
 };
 
-// определение статуса клиента
-const getStatusIncome = () => {
-   if (budgetDay > 1200) {
-      return ('У вас высокий уровень дохода');
-   } else if (budgetDay > 600 && budgetDay < 1200) {
-      return ('У вас средний уровень дохода');
-   } else if (budgetDay < 600 && budgetDay > 0) {
-      return ('К сожалению у вас уровень дохода ниже среднего');
-   } else if (budgetDay < 0) {
-      return ('Что то пошло не так');
-   }
-};
+
+// вызов функций
+appData.asking();
+appData.getExpensesMonth();
+appData.getBudget();
+appData.getTargetMonth();
 
 
+console.log(appData.getStatusIncome());
+console.log('Расходы за месяц: ', appData.expensesAmount);
 
-
-
-// расчет обязательные расходы (итого:)
-let getExpensesMonth = function () {
-   let sum = 0;
-
-   for (let i = 0; i < 2; i++) {
-      appData.expenses[i] = modal('Введите обязательную статью расходов?', stringHandler);
-      sum += modal('Во сколько это обойдется?', numberHandler);
-   }
-   console.log('sum: ', sum);
-   return sum;
-};
-
-// расходы за месяц
-let expensesAmount = getExpensesMonth();
-
-// расчет накопления за месяц
-const getAccumulatedMonth = () => {
-   return money - expensesAmount;
-};
-
-// чистая прибыль
-let accumulatedMonth = getAccumulatedMonth();
-// чистая прибыль в день
-let budgetDay = Math.floor(accumulatedMonth / 30);
-
-// период достижения цели
-const getTargetMonth = () => {
-   let result = appData.mission / accumulatedMonth;
-
-   if (result > 0) {
-      return console.log(`Цель будет достигнута через ${Math.floor(result)} месяца`);
-   } else {
-      return console.log('Цель не будет достигнута');
-   }
-};
-getTargetMonth();
-
-
-
-
-
-console.log('Статьи расходов :', appData.expenses);
-console.log('Итого доходы за месяц: ', money);
-console.log('Итого расходы за месяц: ', expensesAmount);
-console.log('Итого чистой прибыли за месяц: ', accumulatedMonth);
-console.log('Вывод возможных расходов в виде массива: ', appData.addExpenses);
-console.log('Бюджет на день: ', budgetDay);
-console.log('Статус дохода: ', getStatusIncome());
 
