@@ -32,7 +32,6 @@ const stringHandler = (value) => {
    } else {
       return true;
    }
-
 };
 
 let money,
@@ -41,7 +40,6 @@ let money,
          money = modal('Ваш месячный доход?');
          // console.log('money: ', money);
       } while (!numberHandler(money));
-
    };
 
 start();
@@ -70,10 +68,10 @@ let appData = {
    period: 12,
    asking: function () {
       // дополнительные расходы
-      appData.addExpenses = modal(`
-         Перечислите возможные расходы за рассчитываемый период
-         через запятую. (пример: "Квартплата, проездной, кредит")
-         `, stringHandler).toLocaleLowerCase().split(',');
+      appData.addExpenses = 
+      modal('Перечислите возможные расходы за рассчитываемый период через запятую. (пример: "Квартплата, проездной, кредит")', stringHandler)
+      .toLocaleLowerCase()
+      .split(',');
 
       // есть ли депозит?
       appData.deposit = confirm('Есть ли у вас депозит в банке?');
@@ -109,13 +107,7 @@ let appData = {
    },
 
    getTargetMonth: function () {
-      let result = appData.mission / appData.budgetMonth;
-
-      if (result > 0) {
-         return console.log(`Цель будет достигнута через ${Math.floor(result)} месяца`);
-      } else {
-         return console.log('Цель не будет достигнута');
-      }
+      return Math.floor(appData.mission / appData.budgetMonth);
    },
    // определение статуса клиента
    getStatusIncome: function () {
@@ -136,7 +128,16 @@ let appData = {
 appData.asking();
 appData.getExpensesMonth();
 appData.getBudget();
-appData.getTargetMonth();
+
+
+let targetEndInfo = function () {
+   let target = appData.getTargetMonth();
+   if (target > 0) {
+      return console.log(`Цель будет достигнута через ${target} месяца`);
+   } else {
+      return console.log('Цель не будет достигнута');
+   }
+}();
 
 
 console.log(appData.getStatusIncome());
