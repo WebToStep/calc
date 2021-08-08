@@ -45,33 +45,32 @@ let money,
 start();
 
 let appData = {
-   // Доход
-   budget: money,
-   // чистая прибыль в день
-   budgetDay: 0,
-   // чистая прибыль в месяц
-   budgetMonth: 0,
-   // основные расходы за месяц
-   expensesMonth: 0,
-   // Дополнительные расходы за месяц
-   expensesAmount: 0,
-   // 
-   income: {},
+   budget: money,     // Доход
+   budgetDay: 0,      // чистая прибыль в день
+   budgetMonth: 0,    // чистая прибыль в месяц
+   expensesMonth: 0,  // основные расходы за месяц
+   expensesAmount: 0, // Дополнительные расходы за месяц
+   income: {},        // Дополнительный заработок
    addIncome: [],
-   // статьи обязательных расходов
-   expenses: {},
-   // статьи дополнительных расходов
-   addExpenses: [],
-   // есть ли депозит?
-   deposit: false,
-   mission: 2200000,
+   expenses: {},     // статьи обязательных расходов
+   addExpenses: [],  // статьи дополнительных расходов
+   deposit: false,   //депозит?
+   percentDeposit: 0,
+   moneyDeposit: 0,
+   mission: 2200000, //цель
    period: 12,
    asking: function () {
+      if (confirm('Есть ли у вас дополнительный заработок')) {
+         let itemIncome = modal('Какой у вас дополнительный заработок', stringHandler);
+         let cashIncome = modal('Сколько в месяц вы на этом зарабатываете?', numberHandler);
+         appData.income[itemIncome] = cashIncome;
+      }
+
       // дополнительные расходы
-      appData.addExpenses = 
-      modal('Перечислите возможные расходы за рассчитываемый период через запятую. (пример: "Квартплата, проездной, кредит")', stringHandler)
-      .toLocaleLowerCase()
-      .split(',');
+      appData.addExpenses =
+         modal('Перечислите возможные расходы за рассчитываемый период через запятую. (пример: "Квартплата, проездной, кредит",)', stringHandler)
+            .toLocaleLowerCase()
+            .split(',');
 
       // есть ли депозит?
       appData.deposit = confirm('Есть ли у вас депозит в банке?');
@@ -120,6 +119,15 @@ let appData = {
       } else if (appData.budgetDay < 0) {
          return ('Что то пошло не так');
       }
+   },
+   getInfoDeposit() {
+      if (appData.deposit) {
+         appData.percentDeposit = modal('Какой годовой процент?', numberHandler);
+         appData.moneyDeposit = modal('Какая сумма заложенна?', numberHandler);
+      }
+   },
+   calcSavedMoney() {
+      return appData.budgetMonth * appData.period;
    }
 };
 
@@ -128,6 +136,7 @@ let appData = {
 appData.asking();
 appData.getExpensesMonth();
 appData.getBudget();
+// appData.getInfoDeposit();
 
 
 let targetEndInfo = function () {
@@ -140,7 +149,20 @@ let targetEndInfo = function () {
 }();
 
 
-console.log(appData.getStatusIncome());
-console.log('Расходы за месяц: ', appData.expensesAmount);
+const addExpensesMaping = () => {
+   let finalyStr = [];
+   appData.addExpenses.map(value => {
+      let newStr = value[0].toUpperCase() + value.slice(1);
+      finalyStr.push(newStr);
+   });
+
+  return finalyStr.join(', ');
+};
 
 
+console.log('Возможные расходы: ', addExpensesMaping());
+
+// console.log(appData.getStatusIncome());
+// console.log('Расходы за месяц: ', appData.expensesAmount);
+
+// console.log(appData.percentDeposit, appData.moneyDeposit, appData.calcSavedMoney());
