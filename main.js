@@ -1,28 +1,4 @@
 'use strict';
-// получение элементов со страницы
-const calculate = document.getElementById('#start'),
-budgetPlusBtn = document.querySelectorAll('button')[0],
-expensePlusBtn = document.querySelectorAll('button')[1],
-depositCheck = document.querySelector('#deposit-check'),
-incomeValue = document.querySelectorAll('.additional_income-item'),
-budgetDayValue = document.getElementsByClassName('budget_day-value'),
-expensesMonthValue = document.getElementsByClassName('expenses_month-value'),
-additionalIncomeValue = document.getElementsByClassName('additional_income-value'),
-additionalExpensesValue = document.getElementsByClassName('additional_expenses-value'),
-incomePeriodValue = document.getElementsByClassName('income_period-value'),
-targetMonthValue = document.getElementsByClassName('target_month-value'),
-salaryAmount = document.querySelector('.salary-amount'),
-incomeTitle = document.querySelector('.income-title'),
-incomeAmount = document.querySelector('.income-amount'),
-additionalIncomeItem = document.querySelectorAll('.additional_income-item'),
-expensesTitle = document.querySelector('.expenses-title'),
-expensesAmount = document.querySelector('.expenses-amount'),
-additionalExpensesItem = document.querySelector('.additional_expenses-item'),
-targetAmount = document.querySelector('.target-amount'),
-periodSelect = document.querySelector('.period-select'),
-periodAmount = document.querySelector('.period-amount');
-
-
 // вызов модального окна
 const modal = (text, test) => {
    let value = prompt(text);
@@ -66,7 +42,7 @@ let money,
       } while (!numberHandler(money));
    };
 
-// start();
+start();
 
 let appData = {
    budget: money,     // Доход
@@ -157,9 +133,9 @@ let appData = {
 
 
 // вызов функций
-// appData.asking();
-// appData.getExpensesMonth();
-// appData.getBudget();
+appData.asking();
+appData.getExpensesMonth();
+appData.getBudget();
 // appData.getInfoDeposit();
 
 
@@ -184,7 +160,7 @@ const addExpensesMaping = () => {
 };
 
 
-// console.log('Возможные расходы: ', addExpensesMaping());
+console.log('Возможные расходы: ', addExpensesMaping());
 
 // console.log(appData.getStatusIncome());
 // console.log('Расходы за месяц: ', appData.expensesAmount);
