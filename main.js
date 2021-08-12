@@ -49,7 +49,6 @@ const modal = (text, test) => {
 
 // Проверка ввода числа
 const numberHandler = (value) => {
-
    return !isNaN(parseFloat(value) && isFinite(value) && value === '');
 };
 
@@ -59,10 +58,13 @@ const stringHandler = (value) => {
       return false;
    } else if (!Number.isNaN(parseFloat(value))) {
       return false;
-   } else {
+   } else if(value !== value.replace(/[^А-я]/,'')){
+      return false;
+   }else{
       return true;
    }
 };
+
 // проверка на соответствие символов
 const inputHadler = () => {
    inputs = document.querySelectorAll('input');
@@ -70,26 +72,18 @@ const inputHadler = () => {
       i.addEventListener('input', () => {
          if (i.placeholder === 'Наименование') {
             if (!stringHandler(i.value)) {
+               i.value = '';
                return console.error('Пожалуйста введите строчное значение');
             }
          } else if (i.placeholder === 'Сумма') {
             if (!numberHandler(i.value)) {
+               i.value = '';
                return console.error('Пожалуйста вводите цифры');
             }
          }
       });
    });
 };
-// проверка введено ли поле месячный доход
-start.addEventListener('click', () => {
-   if (salaryAmount.value === '') {
-      return console.error('Поле "Месячный доход" не может быть пустым');
-   } else {
-      return appData.start();
-   }
-
-});
-
 
 
 
@@ -232,18 +226,6 @@ let appData = {
    getTargetMonth: function () {
       return Math.ceil(targetAmount.value / appData.budgetMonth);
    },
-   // определение статуса клиента
-   getStatusIncome: function () {
-      if (appData.budgetDay > 1200) {
-         return ('У вас высокий уровень дохода');
-      } else if (appData.budgetDay > 600 && appData.budgetDay < 1200) {
-         return ('У вас средний уровень дохода');
-      } else if (appData.budgetDay < 600 && appData.budgetDay > 0) {
-         return ('К сожалению у вас уровень дохода ниже среднего');
-      } else if (appData.budgetDay < 0) {
-         return ('Что то пошло не так');
-      }
-   },
    getInfoDeposit() {
       if (appData.deposit) {
          appData.percentDeposit = modal('Какой годовой процент?', numberHandler);
@@ -265,6 +247,15 @@ let appData = {
 
 
 inputHadler();
+// проверка введено ли поле месячный доход
+start.addEventListener('click', () => {
+   if (salaryAmount.value === '') {      
+      start.style.cursor = 'not-allowed';
+      return console.error('Поле "Месячный доход" не может быть пустым');
+   } else {
+      return appData.start();
+   }
+});
 
 expensesPlus.addEventListener('click', () => {
    appData.addExpensesBlock();
