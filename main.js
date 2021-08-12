@@ -1,9 +1,9 @@
 'use strict';
 // получение элементов со страницы
 let start = document.getElementById('start'),
-   BtnPlus = document.querySelectorAll('button'),
-   incomePlus = BtnPlus[0],
-   expensesPlus = BtnPlus[1],
+   btnPlus = document.querySelectorAll('button'),
+   incomePlus = btnPlus[0],
+   expensesPlus = btnPlus[1],
    additionalIncomeItem = document.querySelectorAll('.additional_income-item'),
    depositCheck = document.querySelector('#deposit-check'),
    budgetDayValue = document.getElementsByClassName('budget_day-value')[0],
@@ -195,18 +195,6 @@ let appData = {
    getTargetMonth: function () {
       return Math.ceil(targetAmount.value / appData.budgetMonth);
    },
-   // определение статуса клиента
-   getStatusIncome: function () {
-      if (appData.budgetDay > 1200) {
-         return ('У вас высокий уровень дохода');
-      } else if (appData.budgetDay > 600 && appData.budgetDay < 1200) {
-         return ('У вас средний уровень дохода');
-      } else if (appData.budgetDay < 600 && appData.budgetDay > 0) {
-         return ('К сожалению у вас уровень дохода ниже среднего');
-      } else if (appData.budgetDay < 0) {
-         return ('Что то пошло не так');
-      }
-   },
    getInfoDeposit() {
       if (appData.deposit) {
          appData.percentDeposit = modal('Какой годовой процент?', numberHandler);
@@ -229,6 +217,7 @@ let appData = {
 
    start.addEventListener('click', ()=>{
       if(salaryAmount.value === ''){
+         start.style.cursor = 'not-allowed';
          return console.error('Поле "Месячный доход" не может быть пустым');
       }else{
          return appData.start();
