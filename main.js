@@ -253,6 +253,7 @@ start.addEventListener('click', () => {
       start.style.cursor = 'not-allowed';
       return console.error('Поле "Месячный доход" не может быть пустым');
    } else {
+      start.style.cursor = '';
       return appData.start();
    }
 });
