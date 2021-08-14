@@ -98,6 +98,8 @@ const blockResult = () => {
    iputsGroupData.forEach(i=>i.disabled = true);
    start.style.display = 'none';
    cancel.style.display = 'block';
+   expensesPlus.style.display = 'none';
+   incomePlus.style.display = 'none';
 };
 
 let appData = {
@@ -113,6 +115,7 @@ let appData = {
    deposit: false,    // депозит?
    percentDeposit: 0,
    moneyDeposit: 0,
+   buttonsEnabled: true,
    start:function() {
       // получение Месячного дохода
       this.budget = +salaryAmount.value;
