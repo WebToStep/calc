@@ -29,7 +29,6 @@ let start = document.getElementById('start'),
    inputs = document.querySelectorAll('input'),
    iputsGroupData = document.querySelector('.data').querySelectorAll('input');
 
-let docNull = document;
 
 // вызов модального окна
 const modal = (text, test) => {
@@ -59,7 +58,6 @@ const numberHandler = (value) => {
       return false;
    }
 };
-
 
 // Проверка ввода строки
 const stringHandler = (value) => {
@@ -118,24 +116,26 @@ let appData = {
    start:function() {
       // получение Месячного дохода
       this.budget = +salaryAmount.value;
-      // console.log(this);
 
       // вызов функций
-      // this.resetValues();
       this.getExpenses();
       this.getIncome();
+      this.getBudget();
       this.getExpensesMonth();
       this.getAddExpenses();
       this.getAddIncome();
-      this.getBudget();
 
       this.showResult();
       // this.getInfoDeposit();
    },
    reset(){
+      // обрабатываем кнопки
       start.style.display = 'block';
       cancel.style.display = 'none';
+      expensesPlus.style.display = 'block';
+      incomePlus.style.display = 'block';
       
+      // чистим дом элементы
       iputsGroupData.forEach(i=>{
          i.disabled = false;
          if (i.type === 'text'|| i.type === 'checkbox'){
@@ -144,7 +144,21 @@ let appData = {
             i.value = 1;
          }
       });
+      // удаляем лишние инпуты
+      expensesItems.forEach((i, key)=>{
+         if(key > 0){
+            expensesItems[key].remove();
+         }
+      });
+      incomeItems.forEach((i, key)=>{
+         if(key > 0){
+            incomeItems[key].remove();
+         }
+      });
+        
+      
 
+   //   откатываем обьект к исходящему
       appData = Object.assign({}, copyAppData);
       appData.showResult();
       targetMonthValue.value = '';
@@ -185,7 +199,7 @@ let appData = {
       });
 
       expensesItems = document.querySelectorAll('.expenses-items');
-      if (expensesItems.length === 3) {
+      if (expensesItems.length >= 3) {
          expensesPlus.style.display = 'none';
       }
    },
@@ -215,7 +229,7 @@ let appData = {
       });
 
       incomeItems = document.querySelectorAll('.income-items');
-      if (incomeItems.length === 3) {
+      if (incomeItems.length >= 3) {
          incomePlus.style.display = 'none';
       }
    },
@@ -270,13 +284,6 @@ let appData = {
    calcSavedMoney() {
       return this.budgetMonth * periodSelect.value;
    },
-   // обнуляем значения обьекта
-   // resetValues() {
-   //    this.income = {};
-   //    this.incomeMonth = 0;
-   //    this.addIncome = [];
-   //    this.addExpenses = [];
-   // }
 };
 
 
