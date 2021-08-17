@@ -169,6 +169,7 @@ class AppData {
       depositBank.style.display = 'none';
       depositAmount.style.display = 'none';
       depositCheck.checked = false;
+      depositBank.value = '';
 
       // обнуляем исходные данные
       for (let key in this) {
@@ -293,7 +294,7 @@ class AppData {
    }
    // расчет накопления за месяц
    getBudget() {
-      const monthDeposit = this.moneyDeposit * (this.percentDeposit / 100);
+      const monthDeposit = Math.floor(this.moneyDeposit * (this.percentDeposit / 100));
       this.budgetMonth = this.budget + this.incomeMonth - this.expensesMonth + monthDeposit;
       this.budgetDay = Math.floor(+this.budgetMonth / 30);
    }
