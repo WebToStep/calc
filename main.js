@@ -91,14 +91,14 @@ const inputHadler = () => {
                return;
             }
          } else if (i.placeholder === 'Процент') {
-             if (!numberHandler(i.value)) {
+            if (!numberHandler(i.value)) {
                i.value = '';
                return;
-            }else if ( +i.value >= 100 ) {
+            } else if (+i.value >= 100) {
                i.value = '';
                console.error(`число не может быть больше 100%`);
                return;
-            }else if ( +i.value <= 0 ) {
+            } else if (+i.value <= 0) {
                i.value = '';
                console.error(`число не может быть меньше 0%`);
                return;
@@ -132,6 +132,10 @@ class AppData {
       // проверка на заполненный инпут старт
       if (salaryAmount.value === '') {
          return console.error('Поле "Месячный доход" не может быть пустым');
+      } else if (this.deposit && depositPercent.value === '') {
+         return console.error('Поле "Процент депозита" не может быть пустым');
+      } else if (this.deposit && depositAmount.value === '') {
+         return console.error('Поле "Сумма депозита" не может быть пустым');
       } else {
          // Блокировка UI
          iputsGroupData.forEach(i => i.disabled = true);
@@ -307,25 +311,24 @@ class AppData {
          this.moneyDeposit = +depositAmount.value;
       }
    }
-   changePercent(){
+   changePercent() {
       const valueSelect = this.value;
-      
-      
-      if (valueSelect === 'other'){
+
+      if (valueSelect === 'other') {
          depositPercent.value = '';
          depositPercent.style.display = 'inline-block';
-      }else{
+      } else {
          depositPercent.value = valueSelect;
          depositPercent.style.display = 'none';
       }
    }
-   depositHandler(){
-      if(depositCheck.checked){
+   depositHandler() {
+      if (depositCheck.checked) {
          depositBank.style.display = 'inline-block';
          depositAmount.style.display = 'inline-block';
          this.deposit = true;
          depositBank.addEventListener('change', this.changePercent);
-      }else{
+      } else {
          depositPercent.style.display = 'none';
          depositBank.style.display = 'none';
          depositAmount.style.display = 'none';
@@ -355,7 +358,7 @@ class AppData {
       cancel.addEventListener('click', () => this.reset());
       btnPlus.forEach(i => i.addEventListener('click', (e) => this.addInputsGroup(e)));
       periodSelect.addEventListener('change', () => periodAmount.textContent = periodSelect.value);
-      depositCheck.addEventListener('change', ()=> this.depositHandler());
+      depositCheck.addEventListener('change', () => this.depositHandler());
    }
 }
 
